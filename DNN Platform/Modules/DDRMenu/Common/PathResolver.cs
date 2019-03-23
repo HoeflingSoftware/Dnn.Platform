@@ -5,22 +5,6 @@ using System.Web;
 
 namespace DotNetNuke.Web.DDRMenu.DNNCommon
 {
-    public interface IPathResolver
-    {
-        PathResolver Initialize(string manifestFolder);
-        string Resolve(string path, params RelativeTo[] roots);
-    }
-
-    public enum RelativeTo
-    {
-        Container,
-        Dnn,
-        Manifest,
-        Module,
-        Portal,
-        Skin,
-    }
-
     public class PathResolver : IPathResolver
 	{
         protected DNNContext DNNContext { get; }
@@ -40,7 +24,7 @@ namespace DotNetNuke.Web.DDRMenu.DNNCommon
             DNNContext = dnnContext;
         }
 
-        public PathResolver Initialize(string manifestFolder)
+        public IPathResolver Initialize(string manifestFolder)
         {
             this.manifestFolder = manifestFolder;
             return this;

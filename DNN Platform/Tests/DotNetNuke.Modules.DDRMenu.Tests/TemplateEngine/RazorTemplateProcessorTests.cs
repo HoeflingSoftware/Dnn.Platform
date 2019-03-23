@@ -1,7 +1,6 @@
 ﻿using DotNetNuke.Tests.Instance.Utilities;
 using DotNetNuke.Web.DDRMenu.DNNCommon;
 using DotNetNuke.Web.DDRMenu.TemplateEngine;
-using DotNetNuke.Web.Razor;
 using Moq;
 using NUnit.Framework;
 using System;

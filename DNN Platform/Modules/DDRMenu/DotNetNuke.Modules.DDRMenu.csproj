@@ -13,6 +13,7 @@
     <SccProvider>
     </SccProvider>
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -103,7 +104,9 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Common\DNNContext.cs" />
+    <Compile Include="Common\IPathResolver.cs" />
     <Compile Include="Common\PathResolver.cs" />
+    <Compile Include="Common\RelativeTo.cs" />
     <Compile Include="Common\Utilities.cs" />
     <Compile Include="Controller.cs">
       <SubType>Code</SubType>

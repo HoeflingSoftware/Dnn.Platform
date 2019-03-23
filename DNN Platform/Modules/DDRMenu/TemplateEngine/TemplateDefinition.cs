@@ -213,7 +213,7 @@ namespace DotNetNuke.Web.DDRMenu.TemplateEngine
 			return result;
 		}
 
-		private static string GetResolvedPath(XmlNode scriptElt, PathResolver pathResolver)
+		private static string GetResolvedPath(XmlNode scriptElt, IPathResolver pathResolver)
 		{
 			return pathResolver.Resolve(
 				scriptElt.InnerText.Trim(),

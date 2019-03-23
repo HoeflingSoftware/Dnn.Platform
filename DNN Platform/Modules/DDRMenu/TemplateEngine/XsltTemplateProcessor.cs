@@ -36,7 +36,8 @@ namespace DotNetNuke.Web.DDRMenu.TemplateEngine
 
 		public void Render(object source, HtmlTextWriter htmlWriter, TemplateDefinition liveDefinition)
 		{
-			var resolver = new PathResolver(liveDefinition.Folder);
+			var resolver = new PathResolver()
+                .Initialize(liveDefinition.Folder);
 			var hostPage = DNNContext.Current.Page;
 
 			var args = new XsltArgumentList();
@@ -44,10 +45,10 @@ namespace DotNetNuke.Web.DDRMenu.TemplateEngine
 			args.AddExtensionObject("urn:dnngarden", new XsltFunctions());
 			args.AddParam("ControlID", "", DNNContext.Current.HostControl.ClientID);
 			args.AddParam("Options", "", ConvertToJson(liveDefinition.ClientOptions));
-			args.AddParam("DNNPath", "", hostPage.ResolveUrl(resolver.Resolve("/", PathResolver.RelativeTo.Dnn)));
-			args.AddParam("ManifestPath", "", hostPage.ResolveUrl(resolver.Resolve("/", PathResolver.RelativeTo.Manifest)));
-			args.AddParam("PortalPath", "", hostPage.ResolveUrl(resolver.Resolve("/", PathResolver.RelativeTo.Portal)));
-			args.AddParam("SkinPath", "", hostPage.ResolveUrl(resolver.Resolve("/", PathResolver.RelativeTo.Skin)));
+			args.AddParam("DNNPath", "", hostPage.ResolveUrl(resolver.Resolve("/", RelativeTo.Dnn)));
+			args.AddParam("ManifestPath", "", hostPage.ResolveUrl(resolver.Resolve("/", RelativeTo.Manifest)));
+			args.AddParam("PortalPath", "", hostPage.ResolveUrl(resolver.Resolve("/", RelativeTo.Portal)));
+			args.AddParam("SkinPath", "", hostPage.ResolveUrl(resolver.Resolve("/", RelativeTo.Skin)));
 			liveDefinition.TemplateArguments.ForEach(a => args.AddParam(a.Name, "", a.Value));
 
 			HttpContext.Current.Items["Resolver"] = resolver;

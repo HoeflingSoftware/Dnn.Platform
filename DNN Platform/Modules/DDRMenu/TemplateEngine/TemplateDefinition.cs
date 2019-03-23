@@ -40,13 +40,15 @@ namespace DotNetNuke.Web.DDRMenu.TemplateEngine
 
 		internal static TemplateDefinition FromName(string templateName, string manifestName)
 		{
-			var manifestUrl = new PathResolver(null).Resolve(
-				templateName + "/" + manifestName,
-				PathResolver.RelativeTo.Container,
-				PathResolver.RelativeTo.Skin,
-				PathResolver.RelativeTo.Portal,
-				PathResolver.RelativeTo.Module,
-				PathResolver.RelativeTo.Dnn);
+			var manifestUrl = new PathResolver()
+                .Initialize(null)
+                .Resolve(
+				    templateName + "/" + manifestName,
+				    RelativeTo.Container,
+				    RelativeTo.Skin,
+				    RelativeTo.Portal,
+				    RelativeTo.Module,
+				    RelativeTo.Dnn);
 			return FromManifest(manifestUrl);
 		}
 
@@ -64,7 +66,8 @@ namespace DotNetNuke.Web.DDRMenu.TemplateEngine
 				var xml = new XmlDocument { XmlResolver = null };
 				xml.Load(manifestPath);
 
-				var resolver = new PathResolver(baseDef.Folder);
+				var resolver = new PathResolver()
+                    .Initialize(baseDef.Folder);
 
 				// ReSharper disable PossibleNullReferenceException
 				foreach (XmlNode node in xml.DocumentElement.ChildNodes)
@@ -214,11 +217,11 @@ namespace DotNetNuke.Web.DDRMenu.TemplateEngine
 		{
 			return pathResolver.Resolve(
 				scriptElt.InnerText.Trim(),
-				PathResolver.RelativeTo.Manifest,
-				PathResolver.RelativeTo.Skin,
-				PathResolver.RelativeTo.Module,
-				PathResolver.RelativeTo.Portal,
-				PathResolver.RelativeTo.Dnn);
+				RelativeTo.Manifest,
+				RelativeTo.Skin,
+				RelativeTo.Module,
+				RelativeTo.Portal,
+				RelativeTo.Dnn);
 		}
 
 		private static string CreateScript(string jsObject, string scriptPath)

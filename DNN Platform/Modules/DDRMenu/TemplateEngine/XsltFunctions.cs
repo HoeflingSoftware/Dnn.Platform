@@ -78,10 +78,10 @@ namespace DotNetNuke.Web.DDRMenu.TemplateEngine
 			{
 				var localFile = resolver.Resolve(
 					resourceFile,
-					PathResolver.RelativeTo.Manifest,
-					PathResolver.RelativeTo.Skin,
-					PathResolver.RelativeTo.Module,
-					PathResolver.RelativeTo.Dnn);
+					RelativeTo.Manifest,
+					RelativeTo.Skin,
+					RelativeTo.Module,
+					RelativeTo.Dnn);
 				if (File.Exists(HttpContext.Current.Server.MapPath(localFile)))
 				{
 					resolvedFile = localFile;

@@ -150,16 +150,17 @@ namespace DotNetNuke.Web.DDRMenu.TemplateEngine
 
 		public void Render(object source, HtmlTextWriter htmlWriter, TemplateDefinition liveDefinition)
 		{
-			var resolver = new PathResolver(liveDefinition.Folder);
+			var resolver = new PathResolver()
+                .Initialize(liveDefinition.Folder);
 			var args = new XsltArgumentList();
 			args.AddExtensionObject("urn:ddrmenu", new XsltFunctions());
 			args.AddExtensionObject("urn:dnngarden", new XsltFunctions());
 			args.AddParam("controlid", "", DNNContext.Current.HostControl.ClientID);
 			args.AddParam("options", "", ConvertToJson(liveDefinition.ClientOptions));
-			args.AddParam("dnnpath", "", resolver.Resolve("/", PathResolver.RelativeTo.Dnn));
-			args.AddParam("manifestpath", "", resolver.Resolve("/", PathResolver.RelativeTo.Manifest));
-			args.AddParam("portalpath", "", resolver.Resolve("/", PathResolver.RelativeTo.Portal));
-			args.AddParam("skinpath", "", resolver.Resolve("/", PathResolver.RelativeTo.Skin));
+			args.AddParam("dnnpath", "", resolver.Resolve("/", RelativeTo.Dnn));
+			args.AddParam("manifestpath", "", resolver.Resolve("/", RelativeTo.Manifest));
+			args.AddParam("portalpath", "", resolver.Resolve("/", RelativeTo.Portal));
+			args.AddParam("skinpath", "", resolver.Resolve("/", RelativeTo.Skin));
 			liveDefinition.TemplateArguments.ForEach(a => args.AddParam(a.Name.ToLowerInvariant(), "", a.Value));
 
 			var sb = new StringBuilder();

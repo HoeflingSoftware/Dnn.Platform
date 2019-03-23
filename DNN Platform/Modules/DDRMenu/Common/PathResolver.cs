@@ -5,29 +5,49 @@ using System.Web;
 
 namespace DotNetNuke.Web.DDRMenu.DNNCommon
 {
-	public class PathResolver
+    public interface IPathResolver
+    {
+        PathResolver Initialize(string manifestFolder);
+        string Resolve(string path, params RelativeTo[] roots);
+    }
+
+    public enum RelativeTo
+    {
+        Container,
+        Dnn,
+        Manifest,
+        Module,
+        Portal,
+        Skin,
+    }
+
+    public class PathResolver : IPathResolver
 	{
-		public enum RelativeTo
+        protected DNNContext DNNContext { get; }
+        protected HttpContext HttpContext { get; }
+        
+		private string manifestFolder;
+
+		public PathResolver()
 		{
-			Container,
-			Dnn,
-			Manifest,
-			Module,
-			Portal,
-			Skin,
+            HttpContext = HttpContext.Current;
+            DNNContext = DNNContext.Current;
 		}
 
-		private readonly string manifestFolder;
+        public PathResolver(HttpContext httpContext, DNNContext dnnContext)
+        {
+            HttpContext = httpContext;
+            DNNContext = dnnContext;
+        }
 
-		public PathResolver(string manifestFolder)
+        public PathResolver Initialize(string manifestFolder)
+        {
+            this.manifestFolder = manifestFolder;
+            return this;
+        }
+
+        public string Resolve(string path, params RelativeTo[] roots)
 		{
-			this.manifestFolder = manifestFolder;
-		}
-
-		public string Resolve(string path, params RelativeTo[] roots)
-		{
-			var context = DNNContext.Current;
-
 			var mappings = new Dictionary<string, RelativeTo>
 			               {
 			               	{"[DDRMENU]", RelativeTo.Module},
@@ -61,13 +81,13 @@ namespace DotNetNuke.Web.DDRMenu.DNNCommon
 					switch (root)
 					{
 						case RelativeTo.Container:
-							var container = context.HostControl;
+							var container = DNNContext.HostControl;
 							while ((container != null) && !(container is UI.Containers.Container))
 							{
 								container = container.Parent;
 							}
 							var containerRoot = (container == null)
-							                    	? context.SkinPath
+							                    	? DNNContext.SkinPath
 // ReSharper disable PossibleNullReferenceException
 													: Path.GetDirectoryName(((UI.Containers.Container)container).AppRelativeVirtualPath).Replace(
 // ReSharper restore PossibleNullReferenceException
@@ -87,10 +107,10 @@ namespace DotNetNuke.Web.DDRMenu.DNNCommon
 							resolvedPath = Path.Combine(DNNContext.ModuleFolder, path);
 							break;
 						case RelativeTo.Portal:
-							resolvedPath = Path.Combine(context.PortalSettings.HomeDirectory, path);
+							resolvedPath = Path.Combine(DNNContext.PortalSettings.HomeDirectory, path);
 							break;
 						case RelativeTo.Skin:
-							resolvedPath = Path.Combine(context.SkinPath, path);
+							resolvedPath = Path.Combine(DNNContext.SkinPath, path);
 							break;
 					}
 
@@ -100,7 +120,7 @@ namespace DotNetNuke.Web.DDRMenu.DNNCommon
 						var dirName = resolvedPath.Substring(0, sep + 1);
 						var fileName = resolvedPath.Substring(sep + 1);
 
-						var mappedDir = HttpContext.Current.Server.MapPath(dirName);
+						var mappedDir = HttpContext.Server.MapPath(dirName);
 						mappedDir = mappedDir.Remove(mappedDir.Length - 1);
 						if (Directory.Exists(mappedDir))
 						{
@@ -120,5 +140,5 @@ namespace DotNetNuke.Web.DDRMenu.DNNCommon
 
 			return path;
 		}
-	}
+    }
 }

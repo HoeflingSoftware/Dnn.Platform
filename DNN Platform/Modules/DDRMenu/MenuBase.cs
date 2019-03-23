@@ -125,13 +125,15 @@ namespace DotNetNuke.Web.DDRMenu
 		{
 			menuSettings.NodeXmlPath =
 				MapPath(
-					new PathResolver(TemplateDef.Folder).Resolve(
-						menuSettings.NodeXmlPath,
-						PathResolver.RelativeTo.Manifest,
-						PathResolver.RelativeTo.Skin,
-						PathResolver.RelativeTo.Module,
-						PathResolver.RelativeTo.Portal,
-						PathResolver.RelativeTo.Dnn));
+					new PathResolver()
+                        .Initialize(TemplateDef.Folder)
+                        .Resolve(
+						    menuSettings.NodeXmlPath,
+						    RelativeTo.Manifest,
+						    RelativeTo.Skin,
+						    RelativeTo.Module,
+						    RelativeTo.Portal,
+						    RelativeTo.Dnn));
 
 			var cache = CurrentContext.Cache;
 			RootNode = cache[menuSettings.NodeXmlPath] as MenuNode;

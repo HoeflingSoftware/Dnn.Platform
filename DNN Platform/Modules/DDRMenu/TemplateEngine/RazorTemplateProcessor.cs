@@ -14,10 +14,17 @@ namespace DotNetNuke.Web.DDRMenu.TemplateEngine
     public class RazorTemplateProcessor : ITemplateProcessor
     {
         protected HttpContext HttpContext { get; }
+        protected DNNContext DNNContext { get; }
+        protected IPathResolver PathResolver { get; }
 
-        public RazorTemplateProcessor(HttpContext context)
+        public RazorTemplateProcessor(
+            HttpContext context, 
+            DNNContext dnnContext, 
+            IPathResolver pathResolver)
         {
             HttpContext = context;
+            DNNContext = dnnContext;
+            PathResolver = pathResolver;
         }
 
         public bool LoadDefinition(TemplateDefinition baseDefinition)
@@ -37,17 +44,20 @@ namespace DotNetNuke.Web.DDRMenu.TemplateEngine
         {
             if (!(string.IsNullOrEmpty(liveDefinition?.TemplateVirtualPath)))
             {
-                var resolver = new PathResolver(liveDefinition.Folder);
+                PathResolver.Initialize(liveDefinition.Folder);
+
                 dynamic model = new ExpandoObject();
                 model.Source = source;
-                model.ControlID = DNNContext.Current.HostControl.ClientID;
+                model.ControlID = DNNContext.HostControl.ClientID;
                 model.Options = ConvertToJson(liveDefinition.ClientOptions);
-                model.DNNPath = resolver.Resolve("/", PathResolver.RelativeTo.Dnn);
-                model.ManifestPath = resolver.Resolve("/", PathResolver.RelativeTo.Manifest);
-                model.PortalPath = resolver.Resolve("/", PathResolver.RelativeTo.Portal);
-                model.SkinPath = resolver.Resolve("/", PathResolver.RelativeTo.Skin);
+                model.DNNPath = PathResolver.Resolve("/", RelativeTo.Dnn);
+                model.ManifestPath = PathResolver.Resolve("/", RelativeTo.Manifest);
+                model.PortalPath = PathResolver.Resolve("/", RelativeTo.Portal);
+                model.SkinPath = PathResolver.Resolve("/", RelativeTo.Skin);
+
                 var modelDictionary = model as IDictionary<string, object>;
                 liveDefinition.TemplateArguments.ForEach(a => modelDictionary.Add(a.Name, a.Value));
+
                 htmlWriter.Write(RenderTemplate(liveDefinition.TemplateVirtualPath, model));
             }
         }

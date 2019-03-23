@@ -77,10 +77,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DotNetNuke.Web.Razor\DotNetNuke.Web.Razor.csproj">
-      <Project>{9806c125-8ca9-48cc-940a-ccd0442c5993}</Project>
-      <Name>DotNetNuke.Web.Razor</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Modules\DDRMenu\DotNetNuke.Modules.DDRMenu.csproj">
       <Project>{A86EBC44-2BC8-4C4A-997B-2708E4AAC345}</Project>
       <Name>DotNetNuke.Modules.DDRMenu</Name>

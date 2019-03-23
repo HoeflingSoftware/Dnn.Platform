@@ -67,7 +67,7 @@ namespace DotNetNuke.Web.DDRMenu
 
 		public static IEnumerable<ITemplateProcessor> SupportedTemplateProcessors()
 		{
-			return new ITemplateProcessor[] { new TokenTemplateProcessor(), new RazorTemplateProcessor(), new XsltTemplateProcessor()};
+			return new ITemplateProcessor[] { new TokenTemplateProcessor(), new RazorTemplateProcessor(HttpContext.Current), new XsltTemplateProcessor()};
 		}
 
 		public static int GetNavNodeOptions(bool includeHidden)

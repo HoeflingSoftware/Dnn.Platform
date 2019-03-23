@@ -13,6 +13,13 @@ namespace DotNetNuke.Web.DDRMenu.TemplateEngine
 {
     public class RazorTemplateProcessor : ITemplateProcessor
     {
+        protected HttpContext HttpContext { get; }
+
+        public RazorTemplateProcessor(HttpContext context)
+        {
+            HttpContext = context;
+        }
+
         public bool LoadDefinition(TemplateDefinition baseDefinition)
         {
             var virtualPath = baseDefinition.TemplateVirtualPath;
@@ -45,10 +52,15 @@ namespace DotNetNuke.Web.DDRMenu.TemplateEngine
             }
         }
 
+        protected virtual WebPageBase CreateWebPageFromVirtualPath(string virtualPath)
+        {
+            return WebPageBase.CreateInstanceFromVirtualPath(virtualPath);
+        }
+
         private StringWriter RenderTemplate(string virtualPath, dynamic model)
         {
-            var page = WebPageBase.CreateInstanceFromVirtualPath(virtualPath);
-            var httpContext = new HttpContextWrapper(HttpContext.Current);
+            var page = CreateWebPageFromVirtualPath(virtualPath);
+            var httpContext = new HttpContextWrapper(HttpContext);
             var pageContext = new WebPageContext(httpContext, page, model);
 
             var writer = new StringWriter();

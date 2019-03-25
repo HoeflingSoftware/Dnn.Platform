@@ -18,6 +18,12 @@ namespace DotNetNuke.Web.DDRMenu.DNNCommon
             DNNContext = DNNContext.Current;
 		}
 
+        [Obsolete("Deprecated in 9.3.1, will be removed in 11.0.0, use \"Initialize(string manifestFolder)\" instead.")]
+        public PathResolver(string manifestFolder) : this()
+        {
+            Initialize(manifestFolder);
+        }
+
         public PathResolver(HttpContext httpContext, DNNContext dnnContext)
         {
             HttpContext = httpContext;
